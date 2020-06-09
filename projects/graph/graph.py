@@ -85,7 +85,7 @@ class Graph:
         s.push(starting_vertex)
         visited = set()
         if s.size() <= 0:
-            return
+            return s
         else:
             v = s.pop()
             if v not in visited:
@@ -101,27 +101,30 @@ class Graph:
         """
         # Create a Set to store visited vertices
         q1 = Queue()
-        bSet = set()
-        q1.enqueue(starting_vertex)
+        visited = set()
+        p = [starting_vertex]
+        q1.enqueue(p)
 		# While the queue is not empty...
         while q1.size() > 0:
 			# Dequeue the first PATH
-            dSet = q1.dequeue()                 
+            path = q1.dequeue()                 
 			# Grab the last vertex from the PATH
-            # l = bSet[-1]
+            l = path[-1]
 			# If that vertex has not been visited...
-            if dSet not in bSet:
+            if l not in visited:
+                
 				# CHECK IF IT'S THE TARGET
-                if dSet == destination_vertex: 
+                if l == destination_vertex: 
 				  # IF SO, RETURN PATH
-                  return dSet
-                return dSet
-				# Mark it as visited...
-                bSet.add(dSet)
+                  return path
+                # else:
+				# # Mark it as visited...
+                #     visited.add(l)
 				# Then add A PATH TO its neighbors to the back of the queue
-                for next_vert in self.get_neighbors(dSet):
-				  # COPY THE PATH
-                  q1.enqueue(next_vert)
+                for next_vert in self.get_neighbors(l):
+                # COPY THE PATH
+                    newPath = path + [next_vert]
+                    q1.enqueue(newPath)
 				  # APPEND THE NEIGHOR TO THE BACK
                 #   next_vert.put()
 
