@@ -84,14 +84,14 @@ class Graph:
         # q = Queue()
         s.push(starting_vertex)
         visited = set()
-        if s.size() <= 0:
-            return s
-        else:
-            v = s.pop()
-            if v not in visited:
-                visited.add(v)
-                for g in self.get_neighbors(v):
-                    self.dft_recursive(g)
+        # if s.size() <= 0:
+        #     return 
+        # else:
+        v = s.pop()
+        if v not in visited:
+            visited.add(v)
+            for g in self.get_neighbors(v):
+                self.dft_recursive(g)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -111,23 +111,15 @@ class Graph:
 			# Grab the last vertex from the PATH
             l = path[-1]
 			# If that vertex has not been visited...
-            if l not in visited:
-                
+            if l not in visited:  
 				# CHECK IF IT'S THE TARGET
                 if l == destination_vertex: 
 				  # IF SO, RETURN PATH
                   return path
-                # else:
-				# # Mark it as visited...
-                #     visited.add(l)
 				# Then add A PATH TO its neighbors to the back of the queue
                 for next_vert in self.get_neighbors(l):
-                # COPY THE PATH
                     newPath = path + [next_vert]
                     q1.enqueue(newPath)
-				  # APPEND THE NEIGHOR TO THE BACK
-                #   next_vert.put()
-
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -135,8 +127,20 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
-
+        stack = Stack()
+        visited = set()
+        # path = [starting_vertex]
+        stack.push([starting_vertex])
+        while stack.size() > 0:
+            path = stack.pop()                 
+            l = path[-1]
+            if l not in visited:
+                if l == destination_vertex: 
+                  return path
+                for next_vert in self.get_neighbors(l):
+                    newPath = path + [next_vert]
+                    stack.push(newPath)
+				
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
