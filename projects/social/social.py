@@ -1,3 +1,5 @@
+from util import Queue
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -13,12 +15,15 @@ class SocialGraph:
         Creates a bi-directional friendship
         """
         if user_id == friend_id:
-            print("WARNING: You cannot be friends with yourself")
+            # print("WARNING: You cannot be friends with yourself")
+            return False
         elif friend_id in self.friendships[user_id] or user_id in self.friendships[friend_id]:
-            print("WARNING: Friendship already exists")
+            # print("WARNING: Friendship already exists")
+            return False
         else:
             self.friendships[user_id].add(friend_id)
             self.friendships[friend_id].add(user_id)
+            return True
 
     def add_user(self, name):
         """
@@ -43,10 +48,22 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
-
+        
         # Add users
+        for i in range(0, num_users):
+            self.add_user(f"User {i}")
 
         # Create friendships
+        possible_friendships = []
+        # Avoid duplicates by ensuring 1st number is smaller than the second
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+                # Create friendships for the first x pairs of the list
+                # Number of pairs is determined by formula
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
 
     def get_all_social_paths(self, user_id):
         """
@@ -57,14 +74,27 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
+        q = Queue()
+        networkFriend = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
-        return visited
+        q.enqueue([user_id])
+        while q.size() > 0:
+            path = q.dequeue()
+            vertex = path[-1]
+            if vertex not in networkFriend:
+                # path so far
+                networkFriend[vertex] = path
+                # now go through neighbors/friendships
+                for neighbor in self.friendships[vertex]:
+                    # path_copy = list(path)
+                    # path_copy.append(neighbor)
+                    q.enqueue(path + [neighbor])
+        return networkFriend
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
+    sg.populate_graph(1000, 5)
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
